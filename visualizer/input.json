@@ -1,26 +1,3 @@
-[
-  {
-    "cos_path": "perf_analyzer/nullxjx/2023-10-20-12-06-15",
-    "label": "maxtokens-8"
-  },
-  {
-    "cos_path": "perf_analyzer/nullxjx/2023-10-20-11-41-36",
-    "label": "maxtokens-16"
-  },
-  {
-    "cos_path": "perf_analyzer/nullxjx/2023-10-20-12-59-53",
-    "label": "maxtokens-32"
-  },
-  {
-    "cos_path": "perf_analyzer/nullxjx/2023-10-20-13-18-02",
-    "label": "maxtokens-64"
-  },
-  {
-    "cos_path": "perf_analyzer/nullxjx/2023-10-20-14-33-28",
-    "label": "maxtokens-128"
-  },
-  {
-    "cos_path": "perf_analyzer/nullxjx/2023-10-20-14-52-34",
-    "label": "maxtokens-256"
-  }
-]
+version https://git-lfs.github.com/spec/v1
+oid sha256:acdda1c920f78c7001b6d49e0aa8c5596fc1282340435e4aeafdb2042415f7ba
+size 591
