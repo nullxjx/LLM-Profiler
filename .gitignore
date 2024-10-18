@@ -1,0 +1,13 @@
+__pycache__/*
+*.pyc
+*.pyo
+.DS_Store
+.idea
+vendor
+.vscode
+main
+*tmp*
+output.log
+analysis_result
+config/config_local.yml
+*.pdf
