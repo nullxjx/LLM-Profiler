@@ -42,7 +42,6 @@ func StartTest(cfg *config.Config) (string, string) {
 		// todo(@nullxjx) 需要改进，如何更精准判断上一轮已经结束
 		time.Sleep(30 * time.Second)
 	}
-
 	return finish(cfg)
 }
 
@@ -70,7 +69,7 @@ func step(cfg *config.Config, prompts []string, concurrency int) {
 				Result:  results,
 				Counter: counter,
 				Config:  cfg,
-			}, cfg)
+			})
 		default:
 			time.Sleep(10 * time.Millisecond) // Avoid busy waiting
 		}
@@ -114,8 +113,9 @@ func step(cfg *config.Config, prompts []string, concurrency int) {
 	}
 }
 
-func sendRequest(req *param.RequestParam, cfg *config.Config) {
+func sendRequest(req *param.RequestParam) {
 	var backendHandlers map[string]func(*param.RequestParam)
+	cfg := req.Config
 	if cfg.Stream {
 		backendHandlers = map[string]func(*param.RequestParam){
 			string(backend.VLLM): infer.SendVllmStreamRequest,
