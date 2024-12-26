@@ -16,7 +16,7 @@ endConcurrency: 5000
 increment: 30
 duration: 1 # 每轮持续几分钟
 timeThresholds: [750, 1000, 1500, 2000, 3000] # 单位为毫秒
-streamSpeedThresholds: 70 # 流式对话场景的每秒token数速度值，低于该值退出测试，取值范围(0, 100]之间的整数
+streamThresholds: 70 # 流式对话场景的每秒token数速度值，低于该值退出测试，取值范围(0, 100]之间的整数
 saveDir: "nullxjx" # 最好使用你的企微id，方便区分
 
 sendMsg: false
