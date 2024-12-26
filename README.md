@@ -6,29 +6,15 @@ LLM-Profiler 是一个测试 llm 性能（速度和吞吐量）的工具，适�
 
 ## 使用说明
 ### 数据集
-由于测试[数据集](data)比较大，需要使用 Git LFS 下载
+由于测试[数据集](data)比较大，需要使用 git lfs 下载
 - ```brew install git-lfs```
 - ```git lfs install```
 
-### 本地运行
+### 运行方式
 
 1. **单条速度**测试 (不关注并发)
    - ```go run main.go speed -b vllm -i 127.0.0.1 -p 8100 -m llama-70b -u nullxjx -l 1000``` 
    - -l 参数用于指定输入prompt长度（token数量），不指定的话使用默认很短的prompt
-2. **极限吞吐量**测试 (不关注延迟)
-   - ```go run main.go peak -b vllm -i 127.0.0.1 -p 8100 -m llama-70b -u nullxjx```
-3. **给定延迟吞吐量**测试
-   - ```go run main.go inline -b vllm -i 127.0.0.1 -p 8100 -m llama-70b -u nullxjx```
-4. **流式请求** (例如chat测试)
-   - 修改 [config_local.yml](./config/config_local_template.yml)文件，需要把 stream 参数设置为 true
-   - ```go run main.go chat -c config/config_local.yml```
-5. **吞吐量**自定义测试
-   - 修改 [config_local.yml](./config/config_local_template.yml)文件
+2. **吞吐量** 自定义测试
+   - 修改 [config_local.yml](./config/config_template.yml)文件
    - ```go run main.go custom -c config/config_local.yml```
-
-### 集群运行
-1. 需要修改 [k8s_job.yaml](build/k8s_job.yaml) 文件里面的脚本启动参数（含义同上），如下所示
-   - ``` args: [ "auto", "-b", "vllm", "-i", "127.0.0.1", "-p", "8100", "-m", "llama-70b", "-u", "nullxjx" ]```
-2. 启动/删除job
-   - ```kubectl --kubeconfig ~/Desktop/tke-kubeconfig.yaml -n nullxjx apply -f k8s_job.yaml```
-   - ```kubectl --kubeconfig ~/Desktop/tke-kubeconfig.yaml -n nullxjx delete -f k8s_job.yaml```

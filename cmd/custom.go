@@ -2,11 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/nullxjx/llm_profiler/internal/perf/speed"
+	"github.com/nullxjx/llm_profiler/internal/perf/throughput"
 	"os"
 
-	"github.com/nullxjx/LLM-Profiler/common"
-	"github.com/nullxjx/LLM-Profiler/config"
-	"github.com/nullxjx/LLM-Profiler/perf/throughput"
+	"github.com/nullxjx/llm_profiler/config"
+	"github.com/nullxjx/llm_profiler/internal/utils"
+	logformat "github.com/nullxjx/llm_profiler/pkg/log"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -43,11 +46,11 @@ func customTest() {
 	}
 
 	// 判断saveDir是否为空，不为空直接退出
-	if !common.IsDirEmpty(cfg.SaveDir) {
+	if !utils.IsDirEmpty(cfg.SaveDir) {
 		log.Errorf("local save dir: %s is not empty", cfg.SaveDir)
 		return
 	}
-	if err := common.SetLogFile(cfg.SaveDir + "/test.log"); err != nil {
+	if err := logformat.SetLogFile(cfg.SaveDir + "/test.log"); err != nil {
 		return
 	}
 
@@ -55,7 +58,18 @@ func customTest() {
 	log.Infof("Concurrency from %v to %v, Increment: %v, Duration: %v min, Estimated time: %v min",
 		cfg.StartConcurrency, cfg.EndConcurrency, cfg.Increment, cfg.Duration,
 		(cfg.EndConcurrency-cfg.StartConcurrency)/cfg.Increment*cfg.Duration)
-	throughput.ThroughputTest(cfg)
 
+	if cfg.Stream {
+		// 先测出只有一条请求的时的速度（每秒token数），可以使用多条输入数据测试几次取均值
+		log.Infof("calculate max stream speed...")
+		s, err := speed.CalStreamSpeed(cfg)
+		if err != nil {
+			log.Errorf("calculate max speed error: %v", err)
+			return
+		}
+		log.Infof("max stream speed: %.1f tokens/s, first_token: %.1f ms", s.TokensPerSecond, s.FirstTokenTime)
+		cfg.MaxStreamSpeed = s.TokensPerSecond
+	}
+	throughput.StartTest(cfg)
 	log.Infof("Done")
 }

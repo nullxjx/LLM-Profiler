@@ -1,6 +1,0 @@
-cos-python-sdk-v5==1.9.29
-matplotlib
-requests
-tqdm
-reportlab
-pandas

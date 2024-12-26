@@ -6,6 +6,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	ip          string
+	port        int
+	model       string
+	backend     string
+	user        string
+	prompt      int
+	temperature float32
+)
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "perf",

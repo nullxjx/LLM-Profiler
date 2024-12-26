@@ -1,5 +1,6 @@
 # 使用包含Golang的基础镜像构建源码
 FROM golang:1.20.5-bullseye as builder
+#FROM golang:1.20.5-alpine as builder
 
 ENV TZ=Asia/Shanghai
 

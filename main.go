@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/nullxjx/LLM-Profiler/cmd"
-	"github.com/nullxjx/LLM-Profiler/common"
+	"github.com/nullxjx/llm_profiler/cmd"
+	logformat "github.com/nullxjx/llm_profiler/pkg/log"
 
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	log.SetFormatter(&common.MyFormatter{})
+	log.SetFormatter(&logformat.MyFormatter{})
 	log.SetLevel(log.DebugLevel)
 	cmd.Execute()
 }
