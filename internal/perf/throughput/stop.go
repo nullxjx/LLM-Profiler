@@ -90,9 +90,9 @@ func streamStopCheck(cfg *config.Config, current int) bool {
 	// 流式场景是否停止
 	avgClientOutputTokensPerSecond := statistics[current].ClientOutputTokensPerSecond
 	// 这里乘以0.95是容纳一定的波动情况
-	if cfg.Stream && (avgClientOutputTokensPerSecond < cfg.MaxStreamSpeed*float64(cfg.StreamSpeedThresholds)/100*0.95) {
-		log.Warnf("avgClientOutputTokensPerSecond is %v, MaxStreamSpeed is %v, StreamSpeedThresholds is %v%%",
-			avgClientOutputTokensPerSecond, cfg.MaxStreamSpeed, cfg.StreamSpeedThresholds)
+	if cfg.Stream && (avgClientOutputTokensPerSecond < cfg.MaxStreamSpeed*float64(cfg.StreamThresholds)/100*0.95) {
+		log.Warnf("avgClientOutputTokensPerSecond is %v, MaxStreamSpeed is %v, StreamThresholds is %v%%",
+			avgClientOutputTokensPerSecond, cfg.MaxStreamSpeed, cfg.StreamThresholds)
 		delete(statistics, current)
 
 		last := current - cfg.Increment

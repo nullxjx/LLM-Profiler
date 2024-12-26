@@ -25,11 +25,11 @@ func SaveFilesToCos(cfg *config.Config) (string, string, error) {
 	saveDir := cfg.SaveDir
 	// 创建 COS 客户端
 	u, _ := url.Parse(fmt.Sprintf("http://%s.cos.%s.myqcloud.com",
-		os.Getenv(config.Bucket), os.Getenv(config.Region)))
+		os.Getenv(config.EnvBucket), os.Getenv(config.EnvRegion)))
 	client := cos.NewClient(&cos.BaseURL{BucketURL: u}, &http.Client{
 		Transport: &cos.AuthorizationTransport{
-			SecretKey: os.Getenv(config.SecretKey),
-			SecretID:  os.Getenv(config.SecretID),
+			SecretKey: os.Getenv(config.EnvSecretKey),
+			SecretID:  os.Getenv(config.EnvSecretID),
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 			},
@@ -37,7 +37,7 @@ func SaveFilesToCos(cfg *config.Config) (string, string, error) {
 	})
 
 	downloadUrl := ""
-	dstDir := fmt.Sprintf("%s/%s", os.Getenv(config.SubFolder), cfg.SaveDir)
+	dstDir := fmt.Sprintf("%s/%s", os.Getenv(config.EnvSubFolder), cfg.SaveDir)
 
 	// 遍历目录中的所有文件并上传
 	err := filepath.Walk(saveDir, func(path string, info os.FileInfo, err error) error {
@@ -92,7 +92,7 @@ func generatePresignedURL(client *cos.Client, filePath, srcDir, dstDir string) s
 
 	// 生成预签名 URL
 	presignedURL, err := client.Object.GetPresignedURL(context.Background(), http.MethodGet, objectKey,
-		os.Getenv(config.SecretID), os.Getenv(config.SecretKey), 24*time.Hour, nil)
+		os.Getenv(config.EnvSecretID), os.Getenv(config.EnvSecretKey), 24*time.Hour, nil)
 	if err != nil {
 		log.Errorf("Error generating presigned URL for file %s: %v", filePath, err)
 	}

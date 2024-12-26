@@ -59,7 +59,7 @@ func customTest() {
 		cfg.StartConcurrency, cfg.EndConcurrency, cfg.Increment, cfg.Duration,
 		(cfg.EndConcurrency-cfg.StartConcurrency)/cfg.Increment*cfg.Duration)
 
-	if cfg.Stream {
+	if cfg.Stream && cfg.MaxStreamSpeed == 0 {
 		// 先测出只有一条请求的时的速度（每秒token数），可以使用多条输入数据测试几次取均值
 		log.Infof("calculate max stream speed...")
 		s, err := speed.CalStreamSpeed(cfg)

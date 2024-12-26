@@ -28,11 +28,11 @@ func SendMsg(cfg *config.Config, downloadUrl, dstDir string) {
 	msg := fmt.Sprintf("## 🥳🤩🥰 Performance Test Done \nDownload statistics result via 👉 [me](%s) 👈 \n"+
 		//"\nThis presigned URL is available in **6 hours**. After time expired, please find result in cos:\n"+
 		"> bucket: <font color=\"info\">%s</font>\n"+
-		"> path: <font color=\"info\">%s</font>\n\n", downloadUrl, os.Getenv(config.Bucket), dstDir)
+		"> path: <font color=\"info\">%s</font>\n\n", downloadUrl, os.Getenv(config.EnvBucket), dstDir)
 	if cfg.User != "" {
 		msg += fmt.Sprintf("<@%s>\n", cfg.User)
 	}
-	SendWebHook(os.Getenv(config.WebhookUrl), msg)
+	SendWebHook(os.Getenv(config.EnvWebhookUrl), msg)
 }
 
 // SendWebHook 通过webhook向企微推送消息

@@ -104,7 +104,7 @@ func step(cfg *config.Config, prompts []string, concurrency int) {
 			"| Prompt length: %v",
 			timeSpent, metric.Total, metric.Success, metric.Fail,
 			metric.ServerOutputTokensPerSecond, metric.RequestPerSecond, metric.ClientOutputTokensPerSecond,
-			cfg.StreamSpeedThresholds, cfg.MaxStreamSpeed, metric.FirstTokenTime, cfg.InputTokens)
+			cfg.StreamThresholds, cfg.MaxStreamSpeed, metric.FirstTokenTime, cfg.InputTokens)
 	} else {
 		log.Debugf("[time: %.3fs, total: %v, success: %v, fail: %v] "+
 			"| Server: [ %.3f tokens/s, %.3f req/s ] | Prompt length: %v",
@@ -148,7 +148,6 @@ func saveResult(cfg *config.Config) {
 }
 
 func finish(cfg *config.Config) (string, string) {
-	// 有一些配置项比较敏感，不要存到结果中去，这里手动过滤掉这些配置
 	log.Infof("saving config file...")
 	utils.Save2Json(cfg, fmt.Sprintf("%s/config_%s.json", cfg.SaveDir, time.Now().Format(utils.TimeFormat)))
 	// 只保留最新一个统计文件
