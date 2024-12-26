@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/nullxjx/llm_profiler/internal/perf/speed"
-	"github.com/nullxjx/llm_profiler/internal/perf/throughput"
 	"os"
 
 	"github.com/nullxjx/llm_profiler/config"
+	"github.com/nullxjx/llm_profiler/internal/perf/speed"
+	"github.com/nullxjx/llm_profiler/internal/perf/throughput"
 	"github.com/nullxjx/llm_profiler/internal/utils"
 	logformat "github.com/nullxjx/llm_profiler/pkg/log"
 

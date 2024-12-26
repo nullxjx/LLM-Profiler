@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/nullxjx/llm_profiler/internal/perf/speed"
 	"os"
 
+	"github.com/nullxjx/llm_profiler/internal/perf/speed"
 	logformat "github.com/nullxjx/llm_profiler/pkg/log"
 
 	log "github.com/sirupsen/logrus"
