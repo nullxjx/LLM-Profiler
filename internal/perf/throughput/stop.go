@@ -30,7 +30,7 @@ func nonStreamStopCheck(cfg *config.Config, current int) bool {
 		last := current - cfg.Increment
 		_, ok := statistics[last]
 		if ok {
-			log.Infof("Max throughput %.3f tokens/s, %.3f req/s, prompt length: %v",
+			log.Infof("Max throughput %.1f tokens/s, %.1f req/s, prompt length: %v",
 				statistics[last].ServerOutputTokensPerSecond, statistics[last].RequestPerSecond, cfg.InputTokens)
 		} else {
 			log.Infof("Max throughput is zero, please decrease your concurrency")
@@ -59,7 +59,7 @@ func nonStreamStopCheck(cfg *config.Config, current int) bool {
 
 	// 吞吐量出现恶化趋势
 	if currentThroughput < historyAvg*0.95 {
-		log.Warnf("The throughput begin to drop, history: %.3f, current: %.3f", historyAvg, currentThroughput)
+		log.Warnf("The throughput begin to drop, history: %.1f, current: %.1f", historyAvg, currentThroughput)
 		delete(statistics, current)
 		return true
 	}
@@ -77,10 +77,10 @@ func streamStopCheck(cfg *config.Config, current int) bool {
 		log.Warnf("The success rate is %v", successRate)
 		delete(statistics, current)
 		last := current - cfg.Increment
-		_, ok := statistics[last]
+		s, ok := statistics[last]
 		if ok {
-			log.Infof("Max throughput %.3f tokens/s, %.3f req/s, prompt length: %v",
-				statistics[last].ServerOutputTokensPerSecond, statistics[last].RequestPerSecond, cfg.InputTokens)
+			log.Infof("Prompt length: %v, server throughput: %.1f tokens/s, %.1f req/s, ",
+				cfg.InputTokens, s.ServerOutputTokensPerSecond, s.RequestPerSecond)
 		} else {
 			log.Infof("Max throughput is zero, please decrease your concurrency")
 		}
@@ -91,14 +91,16 @@ func streamStopCheck(cfg *config.Config, current int) bool {
 	avgClientOutputTokensPerSecond := statistics[current].ClientOutputTokensPerSecond
 	// 这里乘以0.95是容纳一定的波动情况
 	if cfg.Stream && (avgClientOutputTokensPerSecond < cfg.MaxStreamSpeed*float64(cfg.StreamThresholds)/100*0.95) {
-		log.Warnf("avgClientOutputTokensPerSecond is %v, MaxStreamSpeed is %v, StreamThresholds is %v%%",
-			avgClientOutputTokensPerSecond, cfg.MaxStreamSpeed, cfg.StreamThresholds)
+		log.Warnf("OutputTokensPerSecond is %.1f tokens/s, MaxStreamSpeed is %.1f tokens/s, "+
+			"StreamThresholds is %v%%, quit", avgClientOutputTokensPerSecond, cfg.MaxStreamSpeed, cfg.StreamThresholds)
 		delete(statistics, current)
 
 		last := current - cfg.Increment
-		_, ok := statistics[last]
+		s, ok := statistics[last]
 		if ok {
-			log.Infof("Max throughput %.3f req/s, prompt length: %v", statistics[last].RequestPerSecond, cfg.InputTokens)
+			log.Infof("Prompt length: %v, server throughput: [%.1f req/s, %.1f tokens/s], "+
+				"client stream speed: %.1f tokens/s, first token: %.1f ms",
+				cfg.InputTokens, s.RequestPerSecond, s.ServerOutputTokensPerSecond, cfg.MaxStreamSpeed, s.FirstTokenTime)
 		} else {
 			log.Infof("Max throughput is zero, please decrease your concurrency")
 		}

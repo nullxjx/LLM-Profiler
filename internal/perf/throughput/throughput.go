@@ -33,7 +33,7 @@ func StartTest(cfg *config.Config) (string, string) {
 
 	// 逐步增加并发度，测试吞吐量
 	for concurrency := cfg.StartConcurrency; concurrency <= cfg.EndConcurrency; concurrency += cfg.Increment {
-		log.Infof("🙏🙏🙏 start testing at concurrency %v", concurrency)
+		log.Infof("🙏🙏🙏 start testing at concurrency %v, duration: %v min", concurrency, cfg.Duration)
 		step(cfg, prompts, concurrency)
 		if stop(cfg, concurrency) {
 			break
@@ -42,6 +42,7 @@ func StartTest(cfg *config.Config) (string, string) {
 		// todo(@nullxjx) 需要改进，如何更精准判断上一轮已经结束
 		time.Sleep(30 * time.Second)
 	}
+
 	return finish(cfg)
 }
 
@@ -78,7 +79,7 @@ func step(cfg *config.Config, prompts []string, concurrency int) {
 		inputIndex = (inputIndex + 1) % len(prompts)
 		mu.Unlock()
 	}
-	log.Infof("waiting for all goroutines to finish...")
+	log.Debugf("Waiting for all goroutines to finish...")
 	wg.Wait() // 阻塞，直到 WaitGroup 的计数器变为 0
 	close(results)
 
@@ -98,16 +99,16 @@ func step(cfg *config.Config, prompts []string, concurrency int) {
 	})
 	metric := statistics[concurrency]
 	if cfg.Stream {
-		log.Debugf("[time: %.3fs, total: %v, success: %v, fail: %v] "+
-			"| Server: [ %.3f tokens/s, %.3f req/s ] | Client: %.3f tokens/s "+
+		log.Infof("[time: %.1f s, total: %v, success: %v, fail: %v] "+
+			"| Server: [ %.1f tokens/s, %.1f req/s ] | Client: %.1f tokens/s "+
 			"| Stream thresholds: %v%% | MaxStreamSpeed: %.1f tokens/s, FirstToken: %.1f ms "+
 			"| Prompt length: %v",
 			timeSpent, metric.Total, metric.Success, metric.Fail,
 			metric.ServerOutputTokensPerSecond, metric.RequestPerSecond, metric.ClientOutputTokensPerSecond,
 			cfg.StreamThresholds, cfg.MaxStreamSpeed, metric.FirstTokenTime, cfg.InputTokens)
 	} else {
-		log.Debugf("[time: %.3fs, total: %v, success: %v, fail: %v] "+
-			"| Server: [ %.3f tokens/s, %.3f req/s ] | Prompt length: %v",
+		log.Info("[time: %.1f s, total: %v, success: %v, fail: %v] "+
+			"| Server: [ %.1f tokens/s, %.1f req/s ] | Prompt length: %v",
 			timeSpent, metric.Total, metric.Success, metric.Fail,
 			metric.ServerOutputTokensPerSecond, metric.RequestPerSecond, cfg.InputTokens)
 	}
@@ -148,7 +149,7 @@ func saveResult(cfg *config.Config) {
 }
 
 func finish(cfg *config.Config) (string, string) {
-	log.Infof("saving config file...")
+	log.Debugf("saving config file...")
 	utils.Save2Json(cfg, fmt.Sprintf("%s/config_%s.json", cfg.SaveDir, time.Now().Format(utils.TimeFormat)))
 	// 只保留最新一个统计文件
 	utils.KeepFinalResult(cfg.SaveDir)

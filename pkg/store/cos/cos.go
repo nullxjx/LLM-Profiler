@@ -20,16 +20,24 @@ import (
 	"github.com/tencentyun/cos-go-sdk-v5"
 )
 
+const (
+	EnvSecretID  = "secretID"
+	EnvSecretKey = "secretKey"
+	EnvBucket    = "bucket"
+	EnvRegion    = "region"
+	EnvSubFolder = "subFolder"
+)
+
 // SaveFilesToCos 把 saveDir 目录中的文件保存到腾讯云cos
 func SaveFilesToCos(cfg *config.Config) (string, string, error) {
 	saveDir := cfg.SaveDir
 	// 创建 COS 客户端
 	u, _ := url.Parse(fmt.Sprintf("http://%s.cos.%s.myqcloud.com",
-		os.Getenv(config.EnvBucket), os.Getenv(config.EnvRegion)))
+		os.Getenv(EnvBucket), os.Getenv(EnvRegion)))
 	client := cos.NewClient(&cos.BaseURL{BucketURL: u}, &http.Client{
 		Transport: &cos.AuthorizationTransport{
-			SecretKey: os.Getenv(config.EnvSecretKey),
-			SecretID:  os.Getenv(config.EnvSecretID),
+			SecretKey: os.Getenv(EnvSecretKey),
+			SecretID:  os.Getenv(EnvSecretID),
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 			},
@@ -37,7 +45,7 @@ func SaveFilesToCos(cfg *config.Config) (string, string, error) {
 	})
 
 	downloadUrl := ""
-	dstDir := fmt.Sprintf("%s/%s", os.Getenv(config.EnvSubFolder), cfg.SaveDir)
+	dstDir := fmt.Sprintf("%s/%s", os.Getenv(EnvSubFolder), cfg.SaveDir)
 
 	// 遍历目录中的所有文件并上传
 	err := filepath.Walk(saveDir, func(path string, info os.FileInfo, err error) error {
@@ -92,7 +100,7 @@ func generatePresignedURL(client *cos.Client, filePath, srcDir, dstDir string) s
 
 	// 生成预签名 URL
 	presignedURL, err := client.Object.GetPresignedURL(context.Background(), http.MethodGet, objectKey,
-		os.Getenv(config.EnvSecretID), os.Getenv(config.EnvSecretKey), 24*time.Hour, nil)
+		os.Getenv(EnvSecretID), os.Getenv(EnvSecretKey), 24*time.Hour, nil)
 	if err != nil {
 		log.Errorf("Error generating presigned URL for file %s: %v", filePath, err)
 	}

@@ -67,9 +67,9 @@ func SpeedTest(ip, modelName, backend string, port, promptLength int, temperatur
 		avgTime := totalTime / float64(successCnt)
 		avgTokens := float64(totalTokens) / float64(successCnt)
 		speedValues = append(speedValues, avgTokens/avgTime)
-		log.Infof("output_tokens: %v, avg_time: %.3fs, tokens/s: %.3f", avgTokens, avgTime, avgTokens/avgTime)
+		log.Infof("output_tokens: %v, avg_time: %.1f s, tokens/s: %.1f", avgTokens, avgTime, avgTokens/avgTime)
 	}
-	log.Infof("speed for single request: %.3f tokens/s", utils.MeanWithoutMinMax(speedValues))
+	log.Infof("speed for single request: %.1f tokens/s", utils.MeanWithoutMinMax(speedValues))
 }
 
 func sendRequest(ip, back string, port int, req *param.InferParams) int {
