@@ -131,7 +131,7 @@ func calMetrics(s *StatisticsParam) {
 }
 
 func clearCache() {
-	log.Infof("Clearing statistics cache...")
+	log.Debugf("Clearing statistics cache...")
 	for k := range statistics {
 		delete(statistics, k)
 	}

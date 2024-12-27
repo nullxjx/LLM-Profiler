@@ -47,7 +47,7 @@ func CalStreamSpeed(cfg *config.Config) (*StreamSpeed, error) {
 		timeSpent := float64(time.Now().Sub(start)) / float64(time.Second)
 		speedVal := float64(metrics.OutputTokens) / timeSpent
 		speedList = append(speedList, speedVal)
-		log.Debugf("stream output tokens: %v, time: %.1fs, speed: %.1f tokens/s, firstToken: %.1f ms",
+		log.Debugf("stream output tokens: %v, time: %.1f s, speed: %.1f tokens/s, firstToken: %.1f ms",
 			metrics.OutputTokens, timeSpent, speedVal, metrics.FirstTokenTime)
 
 		if metrics.FirstTokenTime > 0 {

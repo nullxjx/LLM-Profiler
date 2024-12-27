@@ -71,7 +71,7 @@ func Save2Json(v any, saveDir string) {
 }
 
 func KeepFinalResult(saveDir string) {
-	log.Infof("🤖🤖🤖 clearing unused files...")
+	log.Debugf("🤖🤖🤖 clearing unused files...")
 	// 读取目录中的所有文件
 	files, err := ioutil.ReadDir(saveDir)
 	if err != nil {
@@ -102,7 +102,7 @@ func KeepFinalResult(saveDir string) {
 		if err != nil {
 			log.Infof("Error deleting file %s: %v", filePath, err)
 		} else {
-			log.Infof("Deleted file %s", filePath)
+			log.Debugf("Deleted file %s", filePath)
 		}
 	}
 }

@@ -7,12 +7,6 @@ import (
 )
 
 const (
-	EnvSecretID   = "secretID"
-	EnvSecretKey  = "secretKey"
-	EnvWebhookUrl = "webhookUrl"
-	EnvBucket     = "bucket"
-	EnvRegion     = "region"
-	EnvSubFolder  = "subFolder"
 	EnvConfigPath = "configPath"
 )
 
@@ -21,7 +15,7 @@ type ModelConfig struct {
 	Version string `yaml:"version"`
 }
 
-// Config 整体配置
+// Config 服务配置
 type Config struct {
 	Model            ModelConfig `yaml:"model"`            // 模型配置
 	ServerIp         string      `yaml:"serverIp"`         // 模型服务ip

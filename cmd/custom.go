@@ -53,21 +53,19 @@ func customTest() {
 	if err := logformat.SetLogFile(cfg.SaveDir + "/test.log"); err != nil {
 		return
 	}
-
-	log.Infof("Begin performance testing on the model %v at %v:%v.", cfg.Model.Name, cfg.ServerIp, cfg.Port)
-	log.Infof("Concurrency from %v to %v, Increment: %v, Duration: %v min, Estimated time: %v min",
-		cfg.StartConcurrency, cfg.EndConcurrency, cfg.Increment, cfg.Duration,
-		(cfg.EndConcurrency-cfg.StartConcurrency)/cfg.Increment*cfg.Duration)
-
+	log.Infof("Begin performance testing on the model %v at %v:%v, backend: %v",
+		cfg.Model.Name, cfg.ServerIp, cfg.Port, cfg.Backend)
+	log.Infof("Concurrency from %vreqs/%vmin to %vreqs/%vmin, Increment: %v reqs, stream: %v",
+		cfg.StartConcurrency, cfg.Duration, cfg.EndConcurrency, cfg.Duration, cfg.Increment, cfg.Stream)
 	if cfg.Stream && cfg.MaxStreamSpeed == 0 {
 		// 先测出只有一条请求的时的速度（每秒token数），可以使用多条输入数据测试几次取均值
-		log.Infof("calculate max stream speed...")
+		log.Infof("Calculate max stream speed...")
 		s, err := speed.CalStreamSpeed(cfg)
 		if err != nil {
 			log.Errorf("calculate max speed error: %v", err)
 			return
 		}
-		log.Infof("max stream speed: %.1f tokens/s, first_token: %.1f ms", s.TokensPerSecond, s.FirstTokenTime)
+		log.Infof("🍭🍻🚀 Max stream speed: %.1f tokens/s, first_token: %.1f ms", s.TokensPerSecond, s.FirstTokenTime)
 		cfg.MaxStreamSpeed = s.TokensPerSecond
 	}
 	throughput.StartTest(cfg)

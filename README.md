@@ -18,3 +18,17 @@ LLM-Profiler 是一个测试 llm 性能（速度和吞吐量）的工具，适�
 2. **吞吐量** 自定义测试
    - 修改 [config_local.yml](./config/config_template.yml)文件
    - ```go run main.go custom -c config/config_local.yml```
+
+### 修改日志级别
+可以通过环境变量修改日志级别，默认是 Info 级别
+- 2，表示 Error 级别
+- 3，表示 Warn 级别
+- 4，表示 Info 级别
+- 5，表示 Debug 级别
+
+```bash
+Log=5 go run main.go custom
+```
+
+### 运行截图
+![screenshot.png](./assets/screenshot.png)

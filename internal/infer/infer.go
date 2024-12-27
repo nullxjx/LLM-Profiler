@@ -74,7 +74,7 @@ func SendVllmStreamRequest(req *param.RequestParam) {
 	}
 	metrics := stream.CalVllmMetrics(s, start)
 	if metrics.OutputTokens >= int(req.Config.MaxTokens) {
-		log.Debugf("stream output tokens: %d, time spent: %v s, speed: %.1f tokens/s, first_token: %.1f ms",
+		log.Debugf("stream output tokens: %d, time: %.1f s, speed: %.1f tokens/s, first_token: %.1f ms",
 			metrics.OutputTokens, metrics.TimeSpentSeconds, metrics.TokensPerSec, metrics.FirstTokenTime)
 	}
 	atomic.AddInt32(&req.Counter.Success, 1)
@@ -182,7 +182,7 @@ func SendTrtStreamRequest(req *param.RequestParam) {
 
 	metrics := stream.CalTrtMetrics(s, start)
 	if metrics.OutputTokens >= int(cfg.MaxTokens) {
-		log.Debugf("stream output tokens: %d, time spent: %.1f s, speed: %.1f tokens/s, first_token: %.1f ms",
+		log.Debugf("stream output tokens: %d, time: %.1f s, speed: %.1f tokens/s, first_token: %.1f ms",
 			metrics.OutputTokens, metrics.TimeSpentSeconds, metrics.TokensPerSec, metrics.FirstTokenTime)
 	}
 	atomic.AddInt32(&req.Counter.Success, 1)

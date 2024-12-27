@@ -1,14 +1,22 @@
 package main
 
 import (
+	"os"
+	"strconv"
+
 	"github.com/nullxjx/llm_profiler/cmd"
-	logformat "github.com/nullxjx/llm_profiler/pkg/log"
+	format "github.com/nullxjx/llm_profiler/pkg/log"
 
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	log.SetFormatter(&logformat.MyFormatter{})
-	log.SetLevel(log.DebugLevel)
+	log.SetFormatter(&format.MyFormatter{})
+	logLevel := format.DefaultLogLevel
+	level, err := strconv.Atoi(os.Getenv(format.EnvLog))
+	if err == nil {
+		logLevel = level
+	}
+	log.SetLevel(log.Level(logLevel))
 	cmd.Execute()
 }

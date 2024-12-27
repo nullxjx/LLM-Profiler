@@ -10,6 +10,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const (
+	EnvLog          = "Log"
+	DefaultLogLevel = 4 // Info 级别
+)
+
 type MyFormatter struct{}
 
 func (f *MyFormatter) Format(entry *log.Entry) ([]byte, error) {
