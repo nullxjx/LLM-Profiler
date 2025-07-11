@@ -66,7 +66,7 @@ func InferVllmInTriton(p *param.InferParams, url string) ([]param.InferResult, e
 	}
 
 	start := time.Now()
-	url = fmt.Sprintf("http://%s/v1/completions", url)
+	url = fmt.Sprintf("%s/v1/completions", url)
 	ctx := context.Background()
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, time.Duration(p.Timeout)*time.Millisecond)
 	defer cancel()

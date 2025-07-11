@@ -2,10 +2,10 @@ package infer
 
 import (
 	"context"
-	"fmt"
 	"sync/atomic"
 	"time"
 
+	"github.com/nullxjx/llm_profiler/config"
 	"github.com/nullxjx/llm_profiler/internal/infer/param"
 	"github.com/nullxjx/llm_profiler/internal/infer/stream"
 	"github.com/nullxjx/llm_profiler/internal/infer/tgi"
@@ -30,7 +30,7 @@ func SendVllmRequest(req *param.RequestParam) {
 			MaxTokens:   cfg.MaxTokens,
 			Temperature: cfg.Temperature,
 		},
-	}, fmt.Sprintf("%s:%d", cfg.ServerIp, cfg.Port))
+	}, config.GetUrl(cfg))
 	if err != nil {
 		log.Errorf("😭😭😭 infer error: %v", err)
 		atomic.AddInt32(&req.Counter.Failed, 1)
@@ -55,7 +55,8 @@ func SendVllmStreamRequest(req *param.RequestParam) {
 	atomic.AddInt32(&req.Counter.Total, 1)
 	cfg := req.Config
 	start := time.Now()
-	s, err := vllm.StreamCompletionByVLLM(context.Background(), fmt.Sprintf("%s:%d", cfg.ServerIp, cfg.Port),
+	url := config.GetUrl(cfg)
+	s, err := vllm.StreamChatByVLLM(context.Background(), url,
 		&param.InferParams{
 			PromptList:   []string{req.Prompt},
 			ModelName:    cfg.Model.Name,
@@ -104,7 +105,7 @@ func SendTgiRequest(req *param.RequestParam) {
 			MaxTokens:   cfg.MaxTokens,
 			Temperature: cfg.Temperature,
 		},
-	}, fmt.Sprintf("%s:%d", cfg.ServerIp, cfg.Port))
+	}, config.GetUrl(cfg))
 	if err != nil {
 		log.Errorf("😭😭😭 infer error: %v", err)
 		atomic.AddInt32(&req.Counter.Failed, 1)
@@ -137,7 +138,7 @@ func SendTrtRequest(req *param.RequestParam) {
 			MaxTokens:   cfg.MaxTokens,
 			Temperature: cfg.Temperature,
 		},
-	}, fmt.Sprintf("%s:%d", cfg.ServerIp, cfg.Port))
+	}, config.GetUrl(cfg))
 	if err != nil {
 		log.Errorf("😭😭😭 infer error: %v", err)
 		atomic.AddInt32(&req.Counter.Failed, 1)
@@ -162,7 +163,7 @@ func SendTrtStreamRequest(req *param.RequestParam) {
 	cfg := req.Config
 
 	start := time.Now()
-	s, err := triton.StreamInferByTrt(context.Background(), fmt.Sprintf("%s:%d", cfg.ServerIp, cfg.Port),
+	s, err := triton.StreamInferByTrt(context.Background(), config.GetUrl(cfg),
 		&param.InferParams{
 			PromptList:   []string{req.Prompt},
 			ModelName:    cfg.Model.Name,

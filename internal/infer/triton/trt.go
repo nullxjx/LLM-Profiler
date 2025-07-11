@@ -26,7 +26,7 @@ func InferTrt(params *param.InferParams, url string) ([]param.InferResult, error
 		Temperature: params.InferConfig.Temperature,
 	}
 	start := time.Now()
-	url = fmt.Sprintf("http://%s/v2/models/%s/generate", url, params.ModelName)
+	url = fmt.Sprintf("%s/v2/models/%s/generate", url, params.ModelName)
 	ctx := context.Background()
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, time.Duration(params.Timeout)*time.Millisecond)
 	defer cancel()
@@ -72,7 +72,7 @@ func StreamInferByTrt(ctx context.Context, url string, params *param.InferParams
 		Temperature: params.InferConfig.Temperature,
 	}
 	// 拼接trt流式url
-	url = fmt.Sprintf("http://%s/v2/models/%s/generate_stream", url, params.ModelName)
+	url = fmt.Sprintf("%s/v2/models/%s/generate_stream", url, params.ModelName)
 	rsp, err := http.Stream(ctx, url, header, nil, req)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Call trt stream API error, model:%v, err: %v", params.ModelName, err))

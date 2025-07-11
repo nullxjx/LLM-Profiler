@@ -62,7 +62,7 @@ func InferTGI(params *param.InferParams, url string) ([]param.InferResult, error
 		},
 	}
 	start := time.Now()
-	url = fmt.Sprintf("http://%s/generate", url)
+	url = fmt.Sprintf("%s/generate", url)
 	ctx := context.Background()
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, time.Duration(params.Timeout)*time.Millisecond)
 	defer cancel()

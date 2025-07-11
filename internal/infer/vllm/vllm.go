@@ -38,7 +38,7 @@ func Completion(params *param.InferParams, url string) (*param.InferRsp, error) 
 		IgnoreEos: true,
 	}
 
-	url = fmt.Sprintf("http://%s/v1/completions", url)
+	url = fmt.Sprintf("%s/v1/completions", url)
 	ctx := context.Background()
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, time.Duration(params.Timeout)*time.Millisecond)
 	defer cancel()
@@ -97,7 +97,7 @@ func StreamCompletionByVLLM(ctx context.Context, url string, params *param.Infer
 		IgnoreEos: true,
 	}
 	// 拼接vllm流式url
-	url = fmt.Sprintf("http://%s/v1/completions", url)
+	url = fmt.Sprintf("%s/v1/completions", url)
 	rsp, err := http.Stream(ctx, url, header, nil, req)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Call vLLM completions API error, model:%v, err: %v", req.Model, err))
@@ -144,7 +144,7 @@ func StreamChatByVLLM(ctx context.Context, url string, params *param.InferParams
 		},
 	}
 	// 拼接vllm流式url
-	url = fmt.Sprintf("http://%s/v1/chat/completions", url)
+	url = fmt.Sprintf("%s/v1/chat/completions", url)
 	rsp, err := http.Stream(ctx, url, header, nil, req)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Call vLLM chat API error, model:%v, err: %v", req.Model, err))

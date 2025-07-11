@@ -78,15 +78,14 @@ func countOutputTokens(cfg *config.Config, s <-chan []byte, startTime time.Time)
 func sendStreamRequest(cfg *config.Config, prompt string) (<-chan []byte, error) {
 	backendHandlers := map[string]func(ctx context.Context, url string, params *param.InferParams) (
 		<-chan []byte, error){
-		string(backend.VLLM): vllm.StreamCompletionByVLLM,
+		string(backend.VLLM): vllm.StreamChatByVLLM,
 		string(backend.TRT):  triton.StreamInferByTrt,
 	}
 	handler, ok := backendHandlers[strings.ToLower(cfg.Backend)]
 	if !ok {
 		panic(fmt.Sprintf("unsupported backend: %s", cfg.Backend))
 	}
-	return handler(context.Background(),
-		fmt.Sprintf("%s:%d", cfg.ServerIp, cfg.Port),
+	return handler(context.Background(), config.GetUrl(cfg),
 		&param.InferParams{
 			PromptList:   []string{prompt},
 			ModelName:    cfg.Model.Name,
