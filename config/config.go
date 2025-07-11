@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/viper"
@@ -8,6 +9,7 @@ import (
 
 const (
 	EnvConfigPath = "configPath"
+	defaultSchema = "http"
 )
 
 type ModelConfig struct {
@@ -20,6 +22,7 @@ type Config struct {
 	Model            ModelConfig `yaml:"model"`            // 模型配置
 	ServerIp         string      `yaml:"serverIp"`         // 模型服务ip
 	Port             int         `yaml:"port"`             // 模型服务端口
+	Domain           string      `yaml:"domain"`           // 模型服务域名
 	RequestTimeout   int         `yaml:"requestTimeout"`   // 单位为毫秒
 	Backend          string      `yaml:"backend"`          // 推理后端类型，例如 vllm、trt、tgi
 	StopWords        []string    `yaml:"stopWords"`        // stop words
@@ -64,4 +67,12 @@ func ReadConf(configPath string) (*Config, error) {
 		config.Temperature = 1
 	}
 	return config, nil
+}
+
+// GetUrl 获取服务的URL
+func GetUrl(cfg *Config) string {
+	if cfg.Domain != "" {
+		return cfg.Domain
+	}
+	return fmt.Sprintf("%s://%s:%d", defaultSchema, cfg.ServerIp, cfg.Port)
 }

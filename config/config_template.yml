@@ -1,6 +1,7 @@
 model:
   name: "llama"
   version: "1" # 只有triton server会用到
+domain: "https://maas.devops.xiaohongshu.com" # 设置之后下面的 ip 和 port 会失效
 serverIp: "127.0.0.1"
 port: 8080
 requestTimeout: 1000 # 超时时间，单位为毫秒，对流式请求无效
